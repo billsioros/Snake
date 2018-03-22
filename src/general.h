@@ -9,22 +9,22 @@
 
 //Float Functions:
 namespace Float {
-	const std::string toString(const float);
-	const bool aSi(const std::string target); // target iS a Float
+	std::string toString(const float);
+	bool aSi(const std::string target); // target iS a Float
 }
 
 //Integer Functions:
 namespace Integer {
-	const std::string toString(const int);
-	const bool aSi(const std::string& target); // target iS a(n) Integer
-	const int max(int a, int b);
-	const int RandomBetween(const int min, const int max);
+	std::string toString(const int);
+	bool aSi(const std::string& target); // target iS a(n) Integer
+	int max(int a, int b);
+	int RandomBetween(const int min, const int max);
 }
 
 //String Functions:
 namespace String {
-	const std::string tolower(const std::string& target);
-	const unsigned int instancesOf(const char del, const std::string& str);
+	std::string tolower(const std::string& target);
+	unsigned int instancesOf(const char del, const std::string& str);
 }
 
 //File & Fstream Functions:

@@ -170,7 +170,7 @@ void Board::loadFromFile(const char* const filename)
 
 Level::Level(const unsigned int lvl)
 	:
-	B(("Level_" + Integer::toString(lvl) + ".txt").c_str()),
+	B(("../src/Level_" + Integer::toString(lvl) + ".txt").c_str()),
 	S(this->B.size() / 2, this->B.size() / 2),
 	F(Vector2D::Random(0, this->B.size() - 1)),
 	failed(this->B.fail())

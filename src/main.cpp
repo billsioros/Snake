@@ -11,7 +11,6 @@ int main()
 	srand(time(NULL));
 	Game G;
 	G.run();
-
-	system("PAUSE");
+	
 	return 0;
 }

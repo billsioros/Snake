@@ -25,8 +25,8 @@ public:
 	void setXY(const int X, const int Y) { this->x = X; this->y = Y; }
 	void setX(const int X) { this->x = X; }
 	void setY(const int Y) { this->y = Y; }
-	const int getX() const { return this->x; }
-	const int getY() const { return this->y; }
+	int getX() const { return this->x; }
+	int getY() const { return this->y; }
 
 	//Overloaded Operators:
 	Vector2D operator*(const int num) const { return Vector2D(this->x * num, this->y * num); }

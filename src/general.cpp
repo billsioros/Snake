@@ -11,7 +11,7 @@
 using namespace std;
 
 //Float Functions:
-const string Float::toString(const float target)
+string Float::toString(const float target)
 {
 	stringstream stream;
 	stream.setf(ios::fixed, ios::floatfield);
@@ -20,7 +20,7 @@ const string Float::toString(const float target)
 	return stream.str();
 }
 
-const bool Float::aSi(const string target)
+bool Float::aSi(const string target)
 {
 	istringstream strstrm(target); //initialize the stream's buffer with the given string
 	float num;
@@ -31,14 +31,14 @@ const bool Float::aSi(const string target)
 }
 
 //Integer Functions:
-const string Integer::toString(const int target)
+string Integer::toString(const int target)
 {
 	stringstream stream;
 	stream << target;
 	return stream.str();
 }
 
-const bool Integer::aSi(const string& target)
+bool Integer::aSi(const string& target)
 {
 	istringstream strstrm(target); //initialize the stream's buffer with the given string
 	int num;
@@ -48,15 +48,15 @@ const bool Integer::aSi(const string& target)
 	return strstrm.eof() && !strstrm.fail();
 }
 
-const int Integer::max(int a, int b) {
+int Integer::max(int a, int b) {
 	if (a > b) return a;
 	else return b;
 }
 
-const int Integer::RandomBetween(const int min, const int max) { return (min + (rand() % (max - min + 1))); }
+int Integer::RandomBetween(const int min, const int max) { return (min + (rand() % (max - min + 1))); }
 
 //String Functions:
-const string String::tolower(const string& target)
+string String::tolower(const string& target)
 {
 	string lowerCaseStr;
 	for (unsigned int i = 0; i < target.length(); i++) {
@@ -70,7 +70,7 @@ const string String::tolower(const string& target)
 }
 
 //Counts the instances of the given delemeter in the given string
-const unsigned int String::instancesOf(const char del, const string& str)
+unsigned int String::instancesOf(const char del, const string& str)
 {
 	unsigned int counter = 0;
 	const unsigned int length = str.length();
