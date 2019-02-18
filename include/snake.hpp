@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include <game.hpp>
+#include <types.hpp>
 #include <cell.hpp>
+#include <food.hpp>
 
 #include <list>
 
@@ -18,7 +19,8 @@ namespace Game
         (
             coordinate_t x, coordinate_t y, coordinate_t size,
             direction_t direction,
-            std::size_t length
+            std::size_t length,
+            const Color3f& stroke, const Color3f& fill
         );
 
         Snake(const Snake&) = delete;
@@ -34,5 +36,7 @@ namespace Game
         void update();
 
         void steer(direction_t key);
+        
+        bool ate(const Food&) const;
     };
 }

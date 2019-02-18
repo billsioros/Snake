@@ -27,19 +27,34 @@ clean:
 	@echo "***"
 
 
-CELL_DEP = $(addprefix $(PATH_INC)/, game.hpp cell.hpp) $(PATH_SRC)/cell.cpp
+CELL_DEP = $(addprefix $(PATH_INC)/, types.hpp cell.hpp color3f.hpp) $(PATH_SRC)/cell.cpp
 
-SNAKE_DEP = $(addprefix $(PATH_INC)/, game.hpp cell.hpp snake.hpp) $(PATH_SRC)/snake.cpp
+COLOR3F_DEP = $(addprefix $(PATH_INC)/, color3f.hpp) $(PATH_SRC)/color3f.cpp
+
+FOOD_DEP = $(addprefix $(PATH_INC)/, types.hpp color3f.hpp food.hpp) $(PATH_SRC)/food.cpp
+
+GAME_DEP = $(addprefix $(PATH_INC)/, types.hpp cell.hpp game.hpp window.hpp snake.hpp color3f.hpp) $(PATH_SRC)/game.cpp
+
+SNAKE_DEP = $(addprefix $(PATH_INC)/, types.hpp cell.hpp window.hpp snake.hpp color3f.hpp) $(PATH_SRC)/snake.cpp
 
 
 $(PATH_BIN)/cell.o: $(CELL_DEP)
 	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $(PATH_SRC)/cell.cpp -c -o $(PATH_BIN)/cell.o
 
+$(PATH_BIN)/color3f.o: $(COLOR3F_DEP)
+	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $(PATH_SRC)/color3f.cpp -c -o $(PATH_BIN)/color3f.o
+
+$(PATH_BIN)/food.o: $(FOOD_DEP)
+	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $(PATH_SRC)/food.cpp -c -o $(PATH_BIN)/food.o
+
+$(PATH_BIN)/game.o: $(GAME_DEP)
+	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $(PATH_SRC)/game.cpp -c -o $(PATH_BIN)/game.o
+
 $(PATH_BIN)/snake.o: $(SNAKE_DEP)
 	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $(PATH_SRC)/snake.cpp -c -o $(PATH_BIN)/snake.o
 
 
-OBJS = $(addprefix $(PATH_BIN)/,  cell.o snake.o)
+OBJS = $(addprefix $(PATH_BIN)/,  cell.o color3f.o food.o game.o snake.o)
 
 $(PATH_BIN)/%.exe: $(PATH_TEST)/%.cpp $(OBJS)
 	$(CC) -I $(PATH_INC) $(DEFINED) $(CCFLAGS) $< $(OBJS) $(LIBS) -o $@

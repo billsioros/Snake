@@ -1,5 +1,6 @@
 
 #include <snake.hpp>
+#include <window.hpp>
 
 #include <utility>
 #include <list>
@@ -11,7 +12,8 @@ Game::Snake::Snake
 (
     coordinate_t x, coordinate_t y, coordinate_t size,
     direction_t direction,
-    std::size_t length
+    std::size_t length,
+    const Color3f& stroke, const Color3f& fill
 )
 :
 direction(direction)
@@ -19,21 +21,21 @@ direction(direction)
     coordinate_t dx, dy;
     switch (direction)
     {
-        case SOUTH: dx = +0.0f; dy = -size; break;
-        case NORTH: dx = +0.0f; dy = +size; break;
-        case EAST:  dx = +size; dy = +0.0f; break;
-        case WEST:  dx = -size; dy = +0.0f; break;
+        case Game::Keys::Down: dx = +0.0f; dy = -size; break;
+        case Game::Keys::Up: dx = +0.0f; dy = +size; break;
+        case Game::Keys::Right:  dx = +size; dy = +0.0f; break;
+        case Game::Keys::Left:  dx = -size; dy = +0.0f; break;
         default:
-            throw std::invalid_argument("The value of direction should be among [SOUTH, NORTH, EAST, WEST]");
+            throw std::invalid_argument("The value of direction should be among [Game::Keys::Down, Game::Keys::Up, Game::Keys::Right, Game::Keys::Left]");
     }
 
-    emplace_front(x, y, size);
+    emplace_front(x, y, size, stroke, fill);
 
     for (std::size_t i = 0UL; i < length - 1UL; i++)
     {
-        const Cell& cell = front();
+        const Cell& head = front();
 
-        emplace_front(cell.x + dx, cell.y + dy, cell.size);
+        emplace_front(head.x + dx, head.y + dy, size, head.stroke, head.fill);
     }
 }
 
@@ -55,37 +57,39 @@ Game::Snake& Game::Snake::operator=(Snake&& other) noexcept
 
 void Game::Snake::render() const
 {
+    glColor3f(0.1f, 1.0f, 0.1f);
+
     for (const auto& cell : *this)
         cell.render();
 }
 
 void Game::Snake::update()
 {
-    const Cell& cell = front();
+    const Cell& head = front();
 
     coordinate_t dx, dy;
     switch (direction)
     {
-        case SOUTH: dx = +0.0f;  dy = -cell.size; break;
-        case NORTH: dx = +0.0f;  dy = +cell.size; break;
-        case EAST:  dx = +cell.size; dy = +0.0f;  break;
-        case WEST:  dx = -cell.size; dy = +0.0f;  break;
+        case Game::Keys::Down:  dx = +0.0f;      dy = -head.size; break;
+        case Game::Keys::Up:    dx = +0.0f;      dy = +head.size; break;
+        case Game::Keys::Right: dx = +head.size; dy = +0.0f;      break;
+        case Game::Keys::Left:  dx = -head.size; dy = +0.0f;      break;
     }
 
     #if defined (__VERBOSE__)
-        log("key: %c dx: %lf dy: %lf\n", direction, dx, dy);
+        std::printf("key: %c dx: %lf dy: %lf\n", direction, dx, dy);
     #endif
     
-    if (cell.x + cell.size + dx > Window::right())
-        emplace_front(Window::left(), cell.y + dy, cell.size);
-    else if (cell.x + dx < Window::left())
-        emplace_front(Window::right(), cell.y + dy, cell.size);
-    else if (cell.y + cell.size + dy > Window::top())
-        emplace_front(cell.x + dx, Window::bottom(), cell.size);
-    else if (cell.y + dy < Window::bottom())
-        emplace_front(cell.x + dx, Window::top(), cell.size);
+    if (head.x + head.size + dx > Game::Window::right())
+        emplace_front(Game::Window::left(), head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.x + dx < Game::Window::left())
+        emplace_front(Game::Window::right(), head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.y + head.size + dy > Game::Window::top())
+        emplace_front(head.x + dx, Game::Window::bottom(), head.size, head.stroke, head.fill);
+    else if (head.y + dy < Game::Window::bottom())
+        emplace_front(head.x + dx, Game::Window::top(), head.size, head.stroke, head.fill);
     else
-        emplace_front(cell.x + dx, cell.y + dy, cell.size);
+        emplace_front(head.x + dx, head.y + dy, head.size, head.stroke, head.fill);
         
     pop_back();
 }
@@ -94,10 +98,17 @@ void Game::Snake::steer(direction_t direction)
 {
     if
     (
-        direction == SOUTH ||
-        direction == NORTH ||
-        direction == EAST  ||
-        direction == WEST
+        direction == Game::Keys::Down  ||
+        direction == Game::Keys::Up    ||
+        direction == Game::Keys::Right ||
+        direction == Game::Keys::Left
     )
         this->direction = direction;
+}
+
+bool Game::Snake::ate(const Food& food) const
+{
+    const Cell& head = front();
+    
+    return false;
 }
