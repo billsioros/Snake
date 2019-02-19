@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
     
     glutKeyboardFunc(Game::keyboard);
 
-    glutTimerFunc(DELAY, Game::timer, 0);
+    glutTimerFunc(TIMESPAN, Game::timer, 0);
 
     glutMainLoop();
     
