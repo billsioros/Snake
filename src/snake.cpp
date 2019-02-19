@@ -101,10 +101,10 @@ void Game::Snake::steer(direction_t direction)
 {
     if
     (
-        direction == Keys::Down  ||
-        direction == Keys::Up    ||
-        direction == Keys::Right ||
-        direction == Keys::Left
+        (this->direction == Keys::Down  && direction != Keys::Up)   ||
+        (this->direction == Keys::Up    && direction != Keys::Down) ||
+        (this->direction == Keys::Right && direction != Keys::Left) ||
+        (this->direction == Keys::Left  && direction != Keys::Right)
     )
         this->direction = direction;
 }
