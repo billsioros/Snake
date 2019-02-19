@@ -80,14 +80,14 @@ void Game::Snake::update()
         std::printf("key: %c dx: %lf dy: %lf\n", direction, dx, dy);
     #endif
     
-    if (head.x + head.size / 2.0f + dx > Game::Window::right())
-        emplace_front(Game::Window::left() + dx, head.y + dy, head.size, head.stroke, head.fill);
-    else if (head.x - head.size / 2.0f + dx < Game::Window::left())
-        emplace_front(Game::Window::right() + dx, head.y + dy, head.size, head.stroke, head.fill);
-    else if (head.y + head.size / 2.0f + dy > Game::Window::top())
-        emplace_front(head.x + dx, Game::Window::bottom() + dy, head.size, head.stroke, head.fill);
-    else if (head.y - head.size / 2.0f + dy < Game::Window::bottom())
-        emplace_front(head.x + dx, Game::Window::top() + dy, head.size, head.stroke, head.fill);
+    if (head.x + head.size / 2.0f > Game::Window::right())
+        emplace_front(Game::Window::left() + head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.x - head.size / 2.0f < Game::Window::left())
+        emplace_front(Game::Window::right() - head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.y + head.size / 2.0f > Game::Window::top())
+        emplace_front(head.x + dx, Game::Window::bottom() + head.size / 2.0f, head.size, head.stroke, head.fill);
+    else if (head.y - head.size / 2.0f < Game::Window::bottom())
+        emplace_front(head.x + dx, Game::Window::top() - head.size / 2.0f, head.size, head.stroke, head.fill);
     else
         emplace_front(head.x + dx, head.y + dy, head.size, head.stroke, head.fill);
         
@@ -110,5 +110,9 @@ bool Game::Snake::ate(const Food& food) const
 {
     const Cell& head = front();
     
-    return false;
+    return
+    (
+        (head.x - head.size / 2.0f < food.x) && (food.x < head.x + head.size / 2.0f) &&
+        (head.y - head.size / 2.0f < food.y) && (food.y < head.y + head.size / 2.0f)
+    );
 }
