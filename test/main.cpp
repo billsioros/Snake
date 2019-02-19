@@ -2,10 +2,19 @@
 #include <window.hpp>
 #include <game.hpp>
 
+#if defined (__RANDOM__)
+    #include <ctime>
+    #include <cstdlib>
+#endif
+
 #include <GL/glut.h>
 
 int main(int argc, char * argv[])
 {
+    #if defined (__RANDOM__)
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
+    #endif
+
     glutInit(&argc, argv);
 
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);

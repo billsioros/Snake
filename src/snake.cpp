@@ -24,9 +24,9 @@ direction(direction)
     coordinate_t dx, dy;
     switch (direction)
     {
-        case Keys::Down: dx = +0.0f; dy = -size; break;
-        case Keys::Up: dx = +0.0f; dy = +size; break;
-        case Keys::Right:  dx = +size; dy = +0.0f; break;
+        case Keys::Down:  dx = +0.0f; dy = -size; break;
+        case Keys::Up:    dx = +0.0f; dy = +size; break;
+        case Keys::Right: dx = +size; dy = +0.0f; break;
         case Keys::Left:  dx = -size; dy = +0.0f; break;
         default:
             throw std::invalid_argument("The value of direction should be among [Keys::Down, Keys::Up, Keys::Right, Keys::Left]");
