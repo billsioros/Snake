@@ -9,7 +9,7 @@ red(0.0f), green(0.0f), blue(0.0f)
 {
 }
 
-Game::Color3f::Color3f(float red, float green, float blue)
+Game::Color3f::Color3f(Game::coordinate_t red, Game::coordinate_t green, Game::coordinate_t blue)
 :
 red(red), green(green), blue(blue)
 {

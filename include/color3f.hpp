@@ -1,15 +1,17 @@
 
 #pragma once
 
+#include <types.hpp>
+
 namespace Game
 {
 	struct Color3f
 	{
-		float red, green, blue;
+		Game::coordinate_t red, green, blue;
 
 		Color3f();
 
-		Color3f(float red, float green, float blue);
+		Color3f(Game::coordinate_t red, Game::coordinate_t green, Game::coordinate_t blue);
 
 		Color3f(const Color3f&);
 
