@@ -5,8 +5,11 @@
 #include <utility>
 #include <list>
 #include <stdexcept>
+#include <algorithm>
 
 #include <GL/glut.h>
+
+#define RERROR (1.0e-6f)
 
 Game::Snake::Snake
 (
@@ -114,7 +117,7 @@ static inline float rand(float min, float max)
 
 static inline int round(int number, int multiple)
 {
-    return ((number + multiple / 2) / multiple) * multiple;
+    return (number / multiple) * multiple;
 }
 
 bool Game::Snake::ate(Food& food)
@@ -140,14 +143,20 @@ bool Game::Snake::ate(Food& food)
 
         emplace_back(tail.x + dx, tail.y + dy, tail.size, tail.stroke, tail.fill);
 
-        food = Food
-        (
-            round(rand(Window::left(), Window::right()), size()),
-            round(rand(Window::bottom(), Window::top()), size()),
-            food.radius,
-            food.stroke,
-            food.fill
-        );
+        auto predicate = [&food](const Cell& cell)
+        {
+            return std::abs(cell.x - food.x) < RERROR && std::abs(cell.y - food.y) < RERROR;
+        };
+
+        do
+        {
+            food.x = round(rand(Window::left(), Window::right()), head.size);
+            food.y = round(rand(Window::bottom(), Window::top()), head.size);
+        } while (std::find_if(begin(), end(), predicate) != end());
+
+        #if defined (__VERBOSE__)
+            std::printf("fx: %lf, fy: %lf\n", food.x, food.y);
+        #endif
 
         return true;
     }
