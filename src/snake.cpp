@@ -21,12 +21,12 @@ direction(direction)
     coordinate_t dx, dy;
     switch (direction)
     {
-        case Game::Keys::Down: dx = +0.0f; dy = -size; break;
-        case Game::Keys::Up: dx = +0.0f; dy = +size; break;
-        case Game::Keys::Right:  dx = +size; dy = +0.0f; break;
-        case Game::Keys::Left:  dx = -size; dy = +0.0f; break;
+        case Keys::Down: dx = +0.0f; dy = -size; break;
+        case Keys::Up: dx = +0.0f; dy = +size; break;
+        case Keys::Right:  dx = +size; dy = +0.0f; break;
+        case Keys::Left:  dx = -size; dy = +0.0f; break;
         default:
-            throw std::invalid_argument("The value of direction should be among [Game::Keys::Down, Game::Keys::Up, Game::Keys::Right, Game::Keys::Left]");
+            throw std::invalid_argument("The value of direction should be among [Keys::Down, Keys::Up, Keys::Right, Keys::Left]");
     }
 
     emplace_front(x, y, size, stroke, fill);
@@ -70,24 +70,24 @@ void Game::Snake::update()
     coordinate_t dx, dy;
     switch (direction)
     {
-        case Game::Keys::Down:  dx = +0.0f;      dy = -head.size; break;
-        case Game::Keys::Up:    dx = +0.0f;      dy = +head.size; break;
-        case Game::Keys::Right: dx = +head.size; dy = +0.0f;      break;
-        case Game::Keys::Left:  dx = -head.size; dy = +0.0f;      break;
+        case Keys::Down:  dx = +0.0f;      dy = -head.size; break;
+        case Keys::Up:    dx = +0.0f;      dy = +head.size; break;
+        case Keys::Right: dx = +head.size; dy = +0.0f;      break;
+        case Keys::Left:  dx = -head.size; dy = +0.0f;      break;
     }
 
     #if defined (__VERBOSE__)
         std::printf("key: %c dx: %lf dy: %lf\n", direction, dx, dy);
     #endif
     
-    if (head.x + head.size / 2.0f > Game::Window::right())
-        emplace_front(Game::Window::left() + head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
-    else if (head.x - head.size / 2.0f < Game::Window::left())
-        emplace_front(Game::Window::right() - head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
-    else if (head.y + head.size / 2.0f > Game::Window::top())
-        emplace_front(head.x + dx, Game::Window::bottom() + head.size / 2.0f, head.size, head.stroke, head.fill);
-    else if (head.y - head.size / 2.0f < Game::Window::bottom())
-        emplace_front(head.x + dx, Game::Window::top() - head.size / 2.0f, head.size, head.stroke, head.fill);
+    if (head.x + head.size / 2.0f > Window::right())
+        emplace_front(Window::left() + head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.x - head.size / 2.0f < Window::left())
+        emplace_front(Window::right() - head.size / 2.0f, head.y + dy, head.size, head.stroke, head.fill);
+    else if (head.y + head.size / 2.0f > Window::top())
+        emplace_front(head.x + dx, Window::bottom() + head.size / 2.0f, head.size, head.stroke, head.fill);
+    else if (head.y - head.size / 2.0f < Window::bottom())
+        emplace_front(head.x + dx, Window::top() - head.size / 2.0f, head.size, head.stroke, head.fill);
     else
         emplace_front(head.x + dx, head.y + dy, head.size, head.stroke, head.fill);
         
@@ -98,21 +98,59 @@ void Game::Snake::steer(direction_t direction)
 {
     if
     (
-        direction == Game::Keys::Down  ||
-        direction == Game::Keys::Up    ||
-        direction == Game::Keys::Right ||
-        direction == Game::Keys::Left
+        direction == Keys::Down  ||
+        direction == Keys::Up    ||
+        direction == Keys::Right ||
+        direction == Keys::Left
     )
         this->direction = direction;
 }
 
-bool Game::Snake::ate(const Food& food) const
+static inline float rand(float min, float max)
+{
+    return ((max - min) * static_cast<float>(std::rand()) /
+    static_cast<float>(RAND_MAX) + min);
+}
+
+static inline int round(int number, int multiple)
+{
+    return ((number + multiple / 2) / multiple) * multiple;
+}
+
+bool Game::Snake::ate(Food& food)
 {
     const Cell& head = front();
     
-    return
+    if
     (
         (head.x - head.size / 2.0f < food.x) && (food.x < head.x + head.size / 2.0f) &&
         (head.y - head.size / 2.0f < food.y) && (food.y < head.y + head.size / 2.0f)
-    );
+    )
+    {
+        coordinate_t dx, dy;
+        switch (direction)
+        {
+            case Keys::Down:  dx = +0.0f;      dy = -head.size; break;
+            case Keys::Up:    dx = +0.0f;      dy = +head.size; break;
+            case Keys::Right: dx = +head.size; dy = +0.0f;      break;
+            case Keys::Left:  dx = -head.size; dy = +0.0f;      break;
+        }
+
+        const Cell& tail = back();
+
+        emplace_back(tail.x + dx, tail.y + dy, tail.size, tail.stroke, tail.fill);
+
+        food = Food
+        (
+            round(rand(Window::left(), Window::right()), size()),
+            round(rand(Window::bottom(), Window::top()), size()),
+            food.radius,
+            food.stroke,
+            food.fill
+        );
+
+        return true;
+    }
+
+    return false;
 }

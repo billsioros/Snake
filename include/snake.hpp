@@ -37,6 +37,6 @@ namespace Game
 
         void steer(direction_t key);
         
-        bool ate(const Food&) const;
+        bool ate(Food&);
     };
 }
