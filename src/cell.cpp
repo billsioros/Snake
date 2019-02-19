@@ -38,16 +38,16 @@ void Game::Cell::render() const
 {
     glColor3f(fill.red, fill.green, fill.blue);
 
-    glRectf(x, y, x + size, y + size);
+    glRectf(x - size / 2.0f, y - size / 2.0f, x + size / 2.0f, y + size / 2.0f);
 
     glColor3f(stroke.red, stroke.green, stroke.blue);
 
     glBegin(GL_LINE_LOOP);
 
-    glVertex2f(x, y);
-    glVertex2f(x + size, y);
-    glVertex2f(x + size, y + size);
-    glVertex2f(x, y + size);
+    glVertex2f(x - size / 2.0f , y - size / 2.0f);
+    glVertex2f(x - size / 2.0f , y + size / 2.0f);
+    glVertex2f(x + size / 2.0f , y + size / 2.0f);
+    glVertex2f(x + size / 2.0f , y - size / 2.0f);
 
     glEnd();
 }
