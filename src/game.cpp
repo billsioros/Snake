@@ -7,11 +7,14 @@
 #include <cctype>
 #include <ctime>
 #include <cstdlib>
+#include <algorithm>
 
 #include <GL/glut.h>
 
 Game::coordinate_t Game::Window::width = 1280.0f;
 Game::coordinate_t Game::Window::height = 720.0f;
+
+#define RERROR (1.0e-6f)
 
 #define SNAKE_X      (0.0f)
 #define SNAKE_Y      (0.0f)
@@ -79,15 +82,45 @@ void Game::display(void)
     glutSwapBuffers();
 }
 
+static inline float rand(float min, float max)
+{
+    return ((max - min) * static_cast<float>(std::rand()) /
+    static_cast<float>(RAND_MAX) + min);
+}
+
+static inline int round(int number, int multiple)
+{
+    return (number / multiple) * multiple;
+}
+
 void Game::timer(int t)
 {
     glutTimerFunc(TIMESPAN, timer, t);
 
     snake.update();
 
-    snake.ate(food);
+    if (snake.ate(food))
+    {
+        const Cell& head = snake.front();
+
+        auto predicate = [](const Cell& cell)
+        {
+            return std::abs(cell.x - food.x) < RERROR && std::abs(cell.y - food.y) < RERROR;
+        };
+
+        do
+        {
+            food.x = round(rand(Window::left(), Window::right()), head.size);
+            food.y = round(rand(Window::bottom(), Window::top()), head.size);
+        } while (std::find_if(snake.begin(), snake.end(), predicate) != snake.end());
+
+        #if defined (__VERBOSE__)
+            std::printf("fx: %lf, fy: %lf\n", food.x, food.y);
+        #endif
+    }
 
     if (snake.died())
+    {
         snake = Game::Snake
         (
             SNAKE_X, SNAKE_Y, SNAKE_SIZE,
@@ -95,6 +128,7 @@ void Game::timer(int t)
             SNAKE_LENGTH,
             SNAKE_STROKE, SNAKE_FILL
         );
+    }
 
     glutPostRedisplay();
 }
