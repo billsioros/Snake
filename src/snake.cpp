@@ -5,11 +5,8 @@
 #include <utility>
 #include <list>
 #include <stdexcept>
-#include <algorithm>
 
 #include <GL/glut.h>
-
-#define RERROR (1.0e-6f)
 
 Game::Snake::Snake
 (
@@ -109,18 +106,7 @@ void Game::Snake::steer(direction_t direction)
         this->direction = direction;
 }
 
-static inline float rand(float min, float max)
-{
-    return ((max - min) * static_cast<float>(std::rand()) /
-    static_cast<float>(RAND_MAX) + min);
-}
-
-static inline int round(int number, int multiple)
-{
-    return (number / multiple) * multiple;
-}
-
-bool Game::Snake::ate(Food& food)
+bool Game::Snake::ate(const Food& food)
 {
     const Cell& head = front();
     
@@ -143,22 +129,26 @@ bool Game::Snake::ate(Food& food)
 
         emplace_back(tail.x + dx, tail.y + dy, tail.size, tail.stroke, tail.fill);
 
-        auto predicate = [&food](const Cell& cell)
-        {
-            return std::abs(cell.x - food.x) < RERROR && std::abs(cell.y - food.y) < RERROR;
-        };
-
-        do
-        {
-            food.x = round(rand(Window::left(), Window::right()), head.size);
-            food.y = round(rand(Window::bottom(), Window::top()), head.size);
-        } while (std::find_if(begin(), end(), predicate) != end());
-
-        #if defined (__VERBOSE__)
-            std::printf("fx: %lf, fy: %lf\n", food.x, food.y);
-        #endif
-
         return true;
+    }
+
+    return false;
+}
+
+bool Game::Snake::died() const
+{
+    const Cell& head = front();
+
+    for (auto it = ++begin(); it != end(); ++it)
+    {
+        if
+        (
+            (head.x - head.size / 2.0f < it->x) && (it->x < head.x + head.size / 2.0f) &&
+            (head.y - head.size / 2.0f < it->y) && (it->y < head.y + head.size / 2.0f)
+        )
+        {
+            return true;
+        }
     }
 
     return false;
