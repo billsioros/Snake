@@ -87,6 +87,15 @@ void Game::timer(int t)
 
     snake.ate(food);
 
+    if (snake.died())
+        snake = Game::Snake
+        (
+            SNAKE_X, SNAKE_Y, SNAKE_SIZE,
+            SNAKE_KEY,
+            SNAKE_LENGTH,
+            SNAKE_STROKE, SNAKE_FILL
+        );
+
     glutPostRedisplay();
 }
 

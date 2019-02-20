@@ -163,3 +163,22 @@ bool Game::Snake::ate(Food& food)
 
     return false;
 }
+
+bool Game::Snake::died() const
+{
+    const Cell& head = front();
+
+    for (auto it = ++begin(); it != end(); ++it)
+    {
+        if
+        (
+            (head.x - head.size / 2.0f < it->x) && (it->x < head.x + head.size / 2.0f) &&
+            (head.y - head.size / 2.0f < it->y) && (it->y < head.y + head.size / 2.0f)
+        )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
