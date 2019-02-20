@@ -10,6 +10,8 @@ namespace Game
 	{
 		friend class Snake;
 		
+		friend void Game::timer(int t);
+		
 		coordinate_t x, y, radius;
 
 		Color3f stroke, fill;

@@ -11,6 +11,8 @@ namespace Game
 {
     class Snake : public std::list<Game::Cell>
     {
+        friend void Game::timer(int t);
+
         direction_t direction;
 
     public:
@@ -37,7 +39,7 @@ namespace Game
 
         void steer(direction_t key);
         
-        bool ate(Food&);
+        bool ate(const Food&);
 
         bool died() const;
     };
