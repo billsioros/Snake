@@ -2,7 +2,7 @@
 #include <window.hpp>
 #include <game.hpp>
 
-#if defined (__RANDOM__)
+#if ! defined (__AI__)
     #include <ctime>
     #include <cstdlib>
 #endif
@@ -11,7 +11,7 @@
 
 int main(int argc, char * argv[])
 {
-    #if defined (__RANDOM__)
+    #if ! defined (__AI__)
         std::srand(static_cast<unsigned>(std::time(nullptr)));
     #endif
 
