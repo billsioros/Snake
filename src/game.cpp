@@ -133,16 +133,18 @@ void Game::timer(int t)
     glutPostRedisplay();
 }
 
-void Game::keyboard(unsigned char key, int, int)
-{
-    direction_t direction = static_cast<Game::direction_t>(std::tolower(key));
+#if ! defined (__AI__)
+    void Game::keyboard(unsigned char key, int, int)
+    {
+        direction_t direction = static_cast<Game::direction_t>(std::tolower(key));
 
-    if
-    (
-        direction == Keys::Down  ||
-        direction == Keys::Up    ||
-        direction == Keys::Right ||
-        direction == Keys::Left
-    )
-        snake.steer(direction);
-}
+        if
+        (
+            direction == Keys::Down  ||
+            direction == Keys::Up    ||
+            direction == Keys::Right ||
+            direction == Keys::Left
+        )
+            snake.steer(direction);
+    }
+#endif
